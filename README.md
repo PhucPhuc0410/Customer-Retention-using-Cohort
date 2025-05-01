@@ -21,68 +21,74 @@ This project applies Cohort Analysis to track customer retention and sales behav
 - Identify first purchase month per customer to assign cohort groups.
 - Calculate `CohortIndex` (difference in months between order and first purchase).
 
-## ABC Analysis
-ABC Analysis segments products based on their contribution to total revenue:
+## Cohort Analysis
 
-- **A**: Top 40% revenue contributors.
-- **B**: Next 40% revenue contributors.
-- **C**: Bottom 20% revenue contributors.
+Cohort Analysis groups customers based on their first purchase month, while the Cohort Index represents the number of months since that initial purchase, allowing businesses to track customer behavior over time.
 
 ```sql
-DROP TABLE IF EXISTS #Product_Sales;
+DROP TABLE IF EXISTS #Cohort_Index;
 SELECT 
-    PRO.ProductKey,
-    PRO.EnglishProductName,
-    SUM(FACT.SalesAmount) AS Total_Sales_Amount,
-    SUM(FACT.SalesAmount) / @Total_sales * 100 AS Percent_Revenue 
-INTO #Product_Sales
-FROM FactResellerSales FACT
-JOIN DimProduct PRO 
-ON FACT.ProductKey = PRO.ProductKey
-GROUP BY PRO.ProductKey, PRO.EnglishProductName;
+	Y.[Customer ID],
+	Y.[Sales],
+	Y.OrderMonth,
+	C.CohortMonth,
+	DATEDIFF(MONTH, CAST(C.CohortMonth AS DATE), CAST(Y.[OrderMonth] AS DATE)) + 1 AS CohortIndex
+INTO #Cohort_Index
+FROM #Year_2016 Y
+JOIN #Customer_Cohort C ON Y.[Customer ID] = C.[Customer ID];
 ```
 
-XYZ Analysis categorizes products based on sales consistency:
+**Customer Cohort Table** using SQL and Power BI
+![Ảnh chụp màn hình 2025-05-01 180113](https://github.com/user-attachments/assets/b31b1de7-f8dc-4d10-be98-006fe2b58811)
 
-- **X**: Coefficient of Variation ≤ 10%.
-- **Y**: 10% < Coefficient of Variation ≤ 25%.
-- **Z**: Coefficient of Variation > 25%.
+**Sales Cohort Table** using SQL and Power BI
+![Ảnh chụp màn hình 2025-05-01 180145](https://github.com/user-attachments/assets/ac83d6f6-5803-4af5-bdd2-c16cd006f083)
 
-```sql
-DROP TABLE IF EXISTS #XYZ_Analysis;
-SELECT 
-    PRO.ProductKey,
-    PRO.EnglishProductName,
-    AVG(PSPM.MonthlySales) AS Avg_Sales,
-    STDEV(PSPM.MonthlySales) AS STDV_Sales,  
-    CASE 
-        WHEN AVG(PSPM.MonthlySales) = 0 THEN NULL 
-        ELSE STDEV(PSPM.MonthlySales) * 100 / NULLIF(AVG(PSPM.MonthlySales), 0) 
-    END AS Coefficient_Variation 
-INTO #XYZ_Analysis
-FROM #Product_Sales_Per_Month PSPM
-JOIN DimProduct PRO 
-ON PSPM.ProductKey = PRO.ProductKey
-GROUP BY PRO.ProductKey, PRO.EnglishProductName;
+```python
+def month_diff(column):
+    return df_store[column].dt.month
+
+OrderMonth = month_diff('OrderMonth')
+CohortMonth = month_diff('CohortMonth')
+month_diff = OrderMonth - CohortMonth
+
+df_store['CohortIndex'] = month_diff + 1
 ```
+
+**Customer Cohort Table** using Python
+![Figure_1](https://github.com/user-attachments/assets/4c912b07-470b-4bfc-9a62-aa29072b96d6)
+
+**Sales Cohort Table** using Python
+![Figure_2](https://github.com/user-attachments/assets/952b2153-4e39-45dc-9a43-0b9daf555550)
+
 
 ## Application
 
-![HHIG VOULUMN](https://github.com/user-attachments/assets/76424e2a-a17f-42bf-800f-b744253a76f1)
-
-- Ensure availability of **high-volume, stable** (**AX**) products while adjusting stock for **highly fluctuating** (**BZ**, **CZ**) items.
-- Promote and bundle **underperforming** products (**CZ**) with **high-revenue** items (**AX**, **AY**).
-- Target price-sensitive customers with **stable** (**BX**, **CX**) products and implement dynamic pricing for **highly fluctuating** (**BZ**, **CZ**) items.
+- Track retention: Measure how many customers return after their first month.
+- Sales drop-off: Observe when cohorts begin losing value.
+- Lifecycle targeting: Apply lifecycle-based campaigns for re-engagement.
 
 ## Recommendations
-- Focus on high-revenue (A) and low-variability (X) products.
-- Adjust stock for (Z) category products.
-- Ensure consistent availability of (AX, BX) products while dynamically managing (CZ) items.
+
+- There is a steep drop in customer count after the first month across all cohorts, suggesting poor early retention.
+
+→ Improve onboarding and early engagement. Launch a welcome campaign that includes helpful content, time-limited discounts, and personalized product suggestions in the first 30 days. This will help convert one-time buyers into repeat customers.
+
+- Cohorts acquired between April and July maintain better retention and contribute higher revenue over time compared to others.
+
+→ Analyze what drove better performance in these months-campaign type, product focus, or seasonal behavior—and replicate those strategies during other periods.
+
+- Even when customer numbers shrink, some cohorts (e.g., 2016-04) sustain high revenue-indicating a small, loyal, high-value customer base.
+
+→ Develop a loyalty or VIP program. Identify high spenders and reward them with exclusive access, early product launches, or loyalty perks to maximize their lifetime value and advocacy.
 
 ## Limitations
-- Analysis is based on historical data and may not predict future trends.
-- External factors such as seasonality and market fluctuations are not considered.
-- Regular updates are needed to maintain accuracy.
+
+- Based on historical data (e.g., 2016), future behavior may differ.
+- External impacts (e.g., seasonality, trends) are not modeled.
+- The cohort index assumes fixed month intervals and may miss intra-month dynamics.
+
+---
 
 If you find this project useful, feel free to ⭐. Your support will be my super motivation ❤️.
 
@@ -90,8 +96,8 @@ If you find this project useful, feel free to ⭐. Your support will be my super
 
 ## References
 
-- [ABC XYZ Analysis in Inventory Management](https://abcsupplychain.com/abc-xyz-analysis/)
-- [ABC XYZ Analysis for Inventory Management: Example in Excel (Full Tutorial)](https://www.youtube.com/watch?v=-GoYI746kEY)
+- [Cohort Analysis Base on Customer Retention/Revenue using SQL & Power BI | RINEZ](https://www.youtube.com/watch?v=y2g8J_A8VIM&t=789s)
+- [Cohort Analysis Base on Customer Retention/Revenue using Python | RINEZ](https://www.youtube.com/watch?v=-MYoiJEVlUY&t=23s)
 
   ---
 
