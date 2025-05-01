@@ -27,6 +27,7 @@ This project applies Cohort Analysis to track customer retention and sales behav
 
 Cohort Analysis groups customers based on their first purchase month, while the Cohort Index represents the number of months since that initial purchase, allowing businesses to track customer behavior over time.
 
+In SQL Server:
 ```sql
 DROP TABLE IF EXISTS #Cohort_Index;
 SELECT 
@@ -48,6 +49,7 @@ JOIN #Customer_Cohort C ON Y.[Customer ID] = C.[Customer ID];
 
 ![Ảnh chụp màn hình 2025-05-01 180145](https://github.com/user-attachments/assets/ac83d6f6-5803-4af5-bdd2-c16cd006f083)
 
+In Python:
 ```python
 def month_diff(column):
     return df_store[column].dt.month
