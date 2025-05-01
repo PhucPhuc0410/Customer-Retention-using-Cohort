@@ -1,4 +1,4 @@
-# Customer-Retention-using-Cohort
+# Cohort Analysis for Customer Retention
 
 ---
 
