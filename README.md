@@ -12,8 +12,10 @@ This project applies Cohort Analysis to track customer retention and sales behav
 ## Tools Used
 
 - **SQL Server Management Studio (SSMS)** for querying and data processing.
-- **Python** for data extraction, processing, and visualization.
-- **Matplotlib** & **Seaborn** for data visualization.
+- **Power BI** for data visualization and insights.
+- **Python** for querying and data processing, and data visualization.
+
+*Even though SQL and Power BI are sufficient for these tasks. However, I incorporated Python to expand the project scope.*
 
 ## Data Cleaning and Preparation
 
