@@ -39,9 +39,11 @@ JOIN #Customer_Cohort C ON Y.[Customer ID] = C.[Customer ID];
 ```
 
 **Customer Cohort Table** using SQL and Power BI
+
 ![Ảnh chụp màn hình 2025-05-01 180113](https://github.com/user-attachments/assets/b31b1de7-f8dc-4d10-be98-006fe2b58811)
 
 **Sales Cohort Table** using SQL and Power BI
+
 ![Ảnh chụp màn hình 2025-05-01 180145](https://github.com/user-attachments/assets/ac83d6f6-5803-4af5-bdd2-c16cd006f083)
 
 ```python
@@ -56,11 +58,12 @@ df_store['CohortIndex'] = month_diff + 1
 ```
 
 **Customer Cohort Table** using Python
+
 ![Figure_1](https://github.com/user-attachments/assets/4c912b07-470b-4bfc-9a62-aa29072b96d6)
 
 **Sales Cohort Table** using Python
-![Figure_2](https://github.com/user-attachments/assets/952b2153-4e39-45dc-9a43-0b9daf555550)
 
+![Figure_2](https://github.com/user-attachments/assets/952b2153-4e39-45dc-9a43-0b9daf555550)
 
 ## Application
 
